@@ -93,9 +93,13 @@ class AlkotekaSpider(scrapy.Spider):
             return
 
         # Цена
-        price_block = product.get("price_details", [{}])[0]
-        original = float(price_block.get("prev_price") or 0)
-        current = float(price_block.get("price") or original)
+        price_block = product.get("price_details") or None
+        if price_block is None:
+            original = float(product.get("price") or 0)
+            current = original
+        else:
+            original = float(price_block[0].get("prev_price") or 0)
+            current = float(price_block[0].get("price") or original)
 
         # Brand
         brand = ""
